@@ -1,5 +1,19 @@
 import Koa from 'koa'
 import { Nuxt, Builder } from 'nuxt'
+import { resolve } from 'path'
+//数据不变性和函数无副作用是ramda的核心设计理念
+import R from 'ramda'
+
+const r = path => resolve(__dirname, path)
+const MIDDLEWARE = ['router']
+const app = new Koa()
+
+const useMiddleware = (app) => {
+  return R.map(R.compose(
+    R.map(i => i(app)),
+    require,
+    i => `${r('./middlewares')}/${i}`))
+}
 
 async function start () {
   const app = new Koa()
@@ -18,6 +32,8 @@ async function start () {
     const builder = new Builder(nuxt)
     await builder.build()
   }
+
+  await useMiddleware(app)(MIDDLEWARE)
 
   app.use(async (ctx, next) => {
     await next()
