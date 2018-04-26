@@ -5,7 +5,7 @@ import { resolve } from 'path'
 import R from 'ramda'
 
 const r = path => resolve(__dirname, path)
-const MIDDLEWARE = ['router']
+const MIDDLEWARE = ['router', 'database']
 const app = new Koa()
 
 const useMiddleware = (app) => {
